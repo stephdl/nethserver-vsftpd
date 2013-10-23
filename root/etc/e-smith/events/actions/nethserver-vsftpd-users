@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+use esmith::AccountsDB;
+use File::Temp qw(tempfile);
+use File::Path qw(mkpath);
+
+my $adb = esmith::AccountsDB->open_ro or die "Couldn't open AccountsDB\n";
+my $tmp = new File::Temp( UNLINK => 1 );
+my $uid = getpwnam "ftp";
+my $gid = getgrnam "ftp";
+
+for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
+{
+    my %props = $user->props;
+    $props{password} ||= '';
+
+    next if ($props{password} eq '');
+
+    # generate db
+    print $tmp $user->key . "\n";
+    print $tmp $props{password} . "\n";
+
+    # create chroot dir
+    my $dir = '/var/lib/nethserver/ftp/' . $user->key;
+    mkpath($dir);
+    chmod 0770, $dir;
+    system('/bin/chown -R ftp:ftp ' . $dir);
+}
+
+system("/usr/bin/db_load -T -t hash -f $tmp /etc/vsftpd/ftpusers.db");
+chmod 0640, "/etc/vsftpd/ftpusers.db";

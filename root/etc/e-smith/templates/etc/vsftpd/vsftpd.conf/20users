@@ -1,0 +1,24 @@
+# Allow anonymous FTP? (Beware - allowed by default if you comment this out).
+anonymous_enable=NO
+
+# Uncomment this to allow local users to log in.
+local_enable=YES
+
+# specifies a home directory for each virtual user
+user_sub_token=$USER
+local_root=/var/lib/nethserver/ftp/$USER
+
+# Enable virtual users
+guest_enable=YES
+
+# Chroot all users
+chmod_enable=YES
+chroot_local_user=YES
+chroot_list_enable=YES
+virtual_use_local_privs=YES
+
+# Authentication
+pam_service_name=vsftpd-virtual
+userlist_deny=NO
+userlist_enable=YES
+userlist_file=/etc/vsftpd/user_list

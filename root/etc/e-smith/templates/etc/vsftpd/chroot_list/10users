@@ -1,0 +1,17 @@
+{
+    use esmith::AccountsDB;
+
+    my $adb = esmith::AccountsDB->open_ro or die "Couldn't open AccountsDB\n";
+
+    $OUT = '';
+
+    for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
+    {
+        my %props = $user->props;
+        $props{chroot} ||= 'enabled';
+
+        next if ($props{chroot} eq 'enabled');
+
+        $OUT .= $user->key . "\n";
+    }
+}

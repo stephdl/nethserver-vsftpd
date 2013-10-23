@@ -1,0 +1,14 @@
+# When "listen" directive is enabled, vsftpd runs in standalone mode and
+# listens on IPv4 sockets. This directive cannot be used in conjunction
+# with the listen_ipv6 directive.
+listen=YES
+listen_port={$vsftpd{TCPPort} || '21'}
+pasv_min_port=30000
+pasv_max_port=30999
+#
+# This directive enables listening on IPv6 sockets. To listen on IPv4 and IPv6
+# sockets, you must run two copies of vsftpd with two configuration files.
+# Make sure, that one of the listen options is commented !!
+#listen_ipv6=YES
+
+tcp_wrappers=NO
