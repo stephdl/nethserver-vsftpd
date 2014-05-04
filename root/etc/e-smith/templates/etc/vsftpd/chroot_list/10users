@@ -4,14 +4,27 @@
     my $adb = esmith::AccountsDB->open_ro or die "Couldn't open AccountsDB\n";
 
     $OUT = '';
+    my $usertype = $vsftpd{'UserType'} || 'virtual';
+    if ($usertype eq 'virtual') {
+        for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
+        {
+            my %props = $user->props;
+            $props{chroot} ||= 'enabled';
 
-    for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
-    {
-        my %props = $user->props;
-        $props{chroot} ||= 'enabled';
+            next if ($props{chroot} eq 'enabled');
 
-        next if ($props{chroot} eq 'enabled');
+            $OUT .= $user->key . "\n";
+       }
+    } elsif ($usertype eq 'system') {
+        for my $user ( $adb->get_all_by_prop( type => 'user' ) )
+        {
+            my %props = $user->props;
+            $props{FTPChroot} ||= 'enabled';
 
-        $OUT .= $user->key . "\n";
+            next if ($props{FTPChroot} eq 'enabled');
+
+            $OUT .= $user->key . "\n";
+       }
     }
+
 }

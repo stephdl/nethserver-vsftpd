@@ -5,16 +5,29 @@
 
     $OUT = '';
 
-    for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
-    {
-        my %props = $user->props;
-        $props{password} ||= '';
-        $props{status} ||= 'disabled';
+    my $usertype = $vsftpd{'UserType'} || 'virtual';
+    if ($usertype eq 'virtual') {
+        for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
+        {
+            my %props = $user->props;
+            $props{password} ||= '';
+            $props{status} ||= 'disabled';
 
-        next unless ($props{status} eq 'enabled');
-        next if ($props{password} eq '');
+            next unless ($props{status} eq 'enabled');
+            next if ($props{password} eq '');
 
-        $OUT .= $user->key . "\n";
+            $OUT .= $user->key . "\n";
+       }
+    } elsif ($usertype eq 'system') {
+        for my $user ( $adb->get_all_by_prop( type => 'user' ) )
+        {
+            my %props = $user->props;
+            $props{FTPAccess} ||= 'disabled';
+
+            next unless ($props{FTPAccess} eq 'enabled');
+
+            $OUT .= $user->key . "\n";
+       }
     }
 
 }

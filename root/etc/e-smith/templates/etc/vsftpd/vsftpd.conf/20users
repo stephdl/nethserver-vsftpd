@@ -8,8 +8,19 @@ local_enable=YES
 user_sub_token=$USER
 local_root=/var/lib/nethserver/ftp/$USER
 
-# Enable virtual users
-guest_enable=YES
+{
+   my $usertype = $vsftpd{'UserType'} || 'virtual';
+   if ($usertype eq 'virtual') {
+       $OUT .= "# Enable virtual users\n";
+       $OUT .= "guest_enable=YES\n";
+       $OUT .= "pam_service_name=vsftpd-virtual\n";
+       $OUT .= "local_root=/var/lib/nethserver/ftp/\$USER\n";
+   } else {
+       $OUT .= "# Enable system users\n";
+       $OUT .= "pam_service_name=vsftpd\n";
+       $OUT .= "local_root=/var/lib/nethserver/home/\$USER\n";
+   }
+}
 
 # Chroot all users
 chmod_enable=YES
@@ -18,7 +29,6 @@ chroot_list_enable=YES
 virtual_use_local_privs=YES
 
 # Authentication
-pam_service_name=vsftpd-virtual
 userlist_deny=NO
 userlist_enable=YES
 userlist_file=/etc/vsftpd/user_list
