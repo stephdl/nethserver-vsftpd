@@ -22,23 +22,23 @@ if ($usertype eq 'virtual') {
     {
         my $tmp = new File::Temp( UNLINK => 1 );
         my %props = $user->props;
-        $props{password} ||= '';
-        $props{chroot} ||= 'enabled';
+        $props{Password} ||= '';
+        $props{Chroot} ||= 'enabled';
         $props{ChrootDir} ||= '';
 
-        next if ($props{password} eq '');
+        next if ($props{Password} eq '');
 
         # generate db
         print $tmp $user->key . "\n";
-        print $tmp $props{password} . "\n";
+        print $tmp $props{Password} . "\n";
 
-        # create chroot dir
+        # create Chroot dir
         my $dir = '/var/lib/nethserver/ftp/' . $user->key;
         mkpath($dir);
         chmod 0770, $dir;
         system('/bin/chown -R ftp:ftp ' . $dir);
 
-        if ($props{chroot} eq 'enabled' && $props{ChrootDir} ne '' && -d $props{ChrootDir}) {
+        if ($props{Chroot} eq 'enabled' && $props{ChrootDir} ne '' && -d $props{ChrootDir}) {
             open (USER, '>>/etc/vsftpd/users/'.$user->key);
             print USER "local_root=".$props{ChrootDir}."\n";
             close (USER);

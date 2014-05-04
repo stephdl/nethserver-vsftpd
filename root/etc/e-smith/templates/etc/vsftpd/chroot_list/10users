@@ -9,9 +9,9 @@
         for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
         {
             my %props = $user->props;
-            $props{chroot} ||= 'enabled';
+            $props{Chroot} ||= 'enabled';
 
-            next if ($props{chroot} eq 'enabled');
+            next if ($props{Chroot} eq 'enabled');
 
             $OUT .= $user->key . "\n";
        }
