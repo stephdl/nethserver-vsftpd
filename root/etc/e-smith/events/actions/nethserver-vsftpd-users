@@ -1,31 +1,61 @@
 #!/usr/bin/perl
 
 use esmith::AccountsDB;
+use esmith::ConfigDB;
 use File::Temp qw(tempfile);
 use File::Path qw(mkpath);
 
+my $cdb = esmith::ConfigDB->open_ro or die "Couldn't open ConfigDB\n";
 my $adb = esmith::AccountsDB->open_ro or die "Couldn't open AccountsDB\n";
-my $tmp = new File::Temp( UNLINK => 1 );
 my $uid = getpwnam "ftp";
 my $gid = getgrnam "ftp";
 
-for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
-{
-    my %props = $user->props;
-    $props{password} ||= '';
+my $vsftpd = $cdb->get('vsftpd');
+my $usertype = $vsftpd->prop('UserType') || 'virtual';
 
-    next if ($props{password} eq '');
+my @marked_ibays;
+# Clean up specific configuration per user
+unlink glob "/etc/vsftpd/users/*";
 
-    # generate db
-    print $tmp $user->key . "\n";
-    print $tmp $props{password} . "\n";
+if ($usertype eq 'virtual') {
+    for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
+    {
+        my $tmp = new File::Temp( UNLINK => 1 );
+        my %props = $user->props;
+        $props{password} ||= '';
+        $props{chroot} ||= 'enabled';
+        $props{ChrootDir} ||= '';
 
-    # create chroot dir
-    my $dir = '/var/lib/nethserver/ftp/' . $user->key;
-    mkpath($dir);
-    chmod 0770, $dir;
-    system('/bin/chown -R ftp:ftp ' . $dir);
+        next if ($props{password} eq '');
+
+        # generate db
+        print $tmp $user->key . "\n";
+        print $tmp $props{password} . "\n";
+
+        # create chroot dir
+        my $dir = '/var/lib/nethserver/ftp/' . $user->key;
+        mkpath($dir);
+        chmod 0770, $dir;
+        system('/bin/chown -R ftp:ftp ' . $dir);
+
+        if ($props{chroot} eq 'enabled' && $props{ChrootDir} ne '' && -d $props{ChrootDir}) {
+            open (USER, '>>/etc/vsftpd/users/'.$user->key);
+            print USER "local_root=".$props{ChrootDir}."\n";
+            close (USER);
+            system('/usr/bin/setfacl -m u:ftp:rwx '.$props{ChrootDir});
+            push(@marked_ibays, $props{ChrootDir});
+        }
+    }
+    system("/usr/bin/db_load -T -t hash -f $tmp /etc/vsftpd/ftpusers.db");
+    chmod 0640, "/etc/vsftpd/ftpusers.db";
 }
 
-system("/usr/bin/db_load -T -t hash -f $tmp /etc/vsftpd/ftpusers.db");
-chmod 0640, "/etc/vsftpd/ftpusers.db";
+# cleanup acl
+my %marked = map { $_ => 1 } @marked_ibays;
+if ($remove_ftp_acl) {
+    @ibays = </var/lib/nethserver/ibay/*>;
+    foreach $ibay (@ibays) {
+        system('/usr/bin/setfacl -x user:ftp '.$ibay) unless (exists($marked{$ibay}));
+    }
+}
+
