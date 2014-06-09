@@ -48,7 +48,6 @@ $event = 'nethserver-vsftpd-save';
 
 event_actions($event, qw(
       nethserver-vsftpd-users 20
-      nethserver-vsftpd-modprobe 30
       firewall-adjust 40
 ));
 
