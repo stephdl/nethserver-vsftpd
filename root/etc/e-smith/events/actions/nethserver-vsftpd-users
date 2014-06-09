@@ -17,10 +17,11 @@ my @marked_ibays;
 # Clean up specific configuration per user
 unlink glob "/etc/vsftpd/users/*";
 
+my $tmp;
 if ($usertype eq 'virtual') {
     for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
     {
-        my $tmp = new File::Temp( UNLINK => 1 );
+        $tmp = new File::Temp( UNLINK => 1 );
         my %props = $user->props;
         $props{Password} ||= '';
         $props{Chroot} ||= 'enabled';

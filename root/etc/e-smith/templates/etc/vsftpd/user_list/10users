@@ -14,7 +14,7 @@
             $props{status} ||= 'disabled';
 
             next unless ($props{status} eq 'enabled');
-            next if ($props{password} eq '');
+            next if ($props{Password} eq '');
 
             $OUT .= $user->key . "\n";
        }
