@@ -40,6 +40,7 @@ class Users extends \Nethgui\Controller\TableController
             array('username', Validate::USERNAME, \Nethgui\Controller\Table\Modify::KEY),
             array('Password', Validate::ANYTHING, \Nethgui\Controller\Table\Modify::FIELD),
             array('Chroot', Validate::SERVICESTATUS, \Nethgui\Controller\Table\Modify::FIELD),
+            array('ChrootDir', Validate::ANYTHING, \Nethgui\Controller\Table\Modify::FIELD),
             array('status', Validate::SERVICESTATUS, \Nethgui\Controller\Table\Modify::FIELD),
             array('Description', Validate::ANYTHING, \Nethgui\Controller\Table\Modify::FIELD),
         );
