@@ -51,7 +51,6 @@ class Users extends \Nethgui\Controller\TableController
             ->addRowAction(new \Nethgui\Controller\Table\Modify('update', $parameterSchema, 'NethServer\Template\FTP\Users'))
             ->addRowAction(new \Nethgui\Controller\Table\Modify('delete', $parameterSchema, 'Nethgui\Template\Table\Delete'))
             ->addTableAction(new \Nethgui\Controller\Table\Modify('create', $parameterSchema, 'NethServer\Template\FTP\Users'))
-            ->addTableAction(new \NethServer\Module\FTP\Configure())
             ->addTableAction(new \Nethgui\Controller\Table\Help('Help'))
         ;
 
