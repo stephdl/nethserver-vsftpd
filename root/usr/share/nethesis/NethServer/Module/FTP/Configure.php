@@ -27,7 +27,7 @@ use Nethgui\System\PlatformInterface as Validate;
  *
  * @author Giacomo Sanchietti <giacomo.sanchietti@nethesis.it>
  */
-class Configure extends \Nethgui\Controller\Table\AbstractAction
+class Configure extends \Nethgui\Controller\AbstractController
 {
     public function initialize()
     {

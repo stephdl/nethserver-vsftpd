@@ -23,7 +23,7 @@ namespace NethServer\Module;
 /**
  * Implementation of FTP configuration.
  */
-class FTP extends \Nethgui\Controller\CompositeController
+class FTP extends \Nethgui\Controller\TabsController
 {
     protected function initializeAttributes(\Nethgui\Module\ModuleAttributesInterface $base)
     {
