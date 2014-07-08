@@ -6,7 +6,6 @@ local_enable=YES
 
 # specifies a home directory for each virtual user
 user_sub_token=$USER
-local_root=/var/lib/nethserver/ftp/$USER
 
 {
    my $usertype = $vsftpd{'UserType'} || 'virtual';
@@ -18,7 +17,6 @@ local_root=/var/lib/nethserver/ftp/$USER
    } else {
        $OUT .= "# Enable system users\n";
        $OUT .= "pam_service_name=vsftpd\n";
-       $OUT .= "local_root=/var/lib/nethserver/home/\$USER\n";
    }
 }
 
