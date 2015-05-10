@@ -31,6 +31,7 @@ class Configure extends \Nethgui\Controller\AbstractController
 {
     public function initialize()
     {
+        $this->declareParameter('port', Validate::PORTNUMBER, array('configuration', 'vsftpd', 'TCPPort'));
         $this->declareParameter('status', Validate::SERVICESTATUS, array('configuration', 'vsftpd', 'status'));
     }
 
