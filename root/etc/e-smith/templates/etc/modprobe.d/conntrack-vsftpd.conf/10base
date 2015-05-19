@@ -1,0 +1,4 @@
+{
+my $port = ${vsftpd}{TCPPort} || '21';
+$OUT .=" options ip_conntrack_ftp ports=21,$port";
+}

@@ -29,6 +29,7 @@ use Nethgui\System\PlatformInterface as Validate;
  */
 class Configure extends \Nethgui\Controller\AbstractController
 {
+
     public function initialize()
     {
         $this->declareParameter('port', Validate::PORTNUMBER, array('configuration', 'vsftpd', 'TCPPort'));
@@ -37,8 +38,7 @@ class Configure extends \Nethgui\Controller\AbstractController
 
     protected function onParametersSaved($changedParameters)
     {
-        $this->getPlatform()->signalEvent('nethserver-vsftpd-update');
-        $this->getPlatform()->signalEvent('firewall-adjust');
+        $this->getPlatform()->signalEvent('nethserver-vsftpd-save');
     }
 
 }
