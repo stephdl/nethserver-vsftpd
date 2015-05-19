@@ -41,3 +41,17 @@ Description
     Optional user's description.
     For example: Access for the company site.
 
+Configure
+=========
+
+Enabled/disabled
+    Start or stop the FTP service.
+
+Advanced configuration
+----------------------
+
+TCP port
+    Enter the TCP port used for FTP access.
+
+Allow access only from trusted networks
+    If only enabled, restricts access to the resource only to trusted networks.

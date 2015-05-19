@@ -36,6 +36,7 @@ event_templates($event, qw(
       /etc/vsftpd/vsftpd.conf
       /etc/vsftpd/chroot_list  
       /etc/vsftpd/user_list
+     /etc/modprobe.d/conntrack-vsftpd.conf
 ));
 
 event_services($event, 'vsftpd' => 'restart');
@@ -55,6 +56,7 @@ event_templates($event, qw(
       /etc/vsftpd/vsftpd.conf
       /etc/vsftpd/chroot_list  
       /etc/vsftpd/user_list
+      /etc/modprobe.d/conntrack-vsftpd.conf
 ));
 
 event_services($event, 'vsftpd' => 'restart');
