@@ -53,5 +53,3 @@ Advanced configuration
 TCP port
     Enter the TCP port used for FTP access.
 
-Allow access only from trusted networks
-    If only enabled, restricts access to the resource only to trusted networks.
