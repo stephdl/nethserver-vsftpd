@@ -1,7 +1,7 @@
 Summary: NethServer vsftpd configuration
 Name: nethserver-vsftpd
-Version: 1.0.1
-Release: 1%{?dist}
+Version: @@VERSION@@
+Release: @@RELEASE@@
 License: GPL
 URL: %{url_prefix}/%{name} 
 Source0: %{name}-%{version}.tar.gz
