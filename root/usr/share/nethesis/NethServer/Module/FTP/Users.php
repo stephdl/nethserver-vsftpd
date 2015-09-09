@@ -36,8 +36,10 @@ class Users extends \Nethgui\Controller\TableController
             'Actions',
         );
 
+        $userNameValidator = $this->getPlatform()->createValidator(Validate::USERNAME)->platform('user-create');
+
         $parameterSchema = array(
-            array('username', Validate::USERNAME, \Nethgui\Controller\Table\Modify::KEY),
+            array('username', $userNameValidator, \Nethgui\Controller\Table\Modify::KEY),
             array('Password', Validate::ANYTHING, \Nethgui\Controller\Table\Modify::FIELD),
             array('Chroot', Validate::SERVICESTATUS, \Nethgui\Controller\Table\Modify::FIELD),
             array('ChrootDir', Validate::ANYTHING, \Nethgui\Controller\Table\Modify::FIELD),
