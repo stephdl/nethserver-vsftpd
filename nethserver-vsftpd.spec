@@ -1,6 +1,6 @@
 Summary: NethServer vsftpd configuration
 Name: nethserver-vsftpd
-Version: 1.0.3
+Version: 1.0.4
 Release: 1%{?dist}
 License: GPL
 URL: %{url_prefix}/%{name} 
@@ -37,6 +37,9 @@ echo "%doc COPYING" >> %{name}-%{version}-filelist
 %defattr(-,root,root)
 
 %changelog
+* Tue Sep 29 2015 Davide Principi <davide.principi@nethesis.it> - 1.0.4-1
+- Make Italian language pack optional - Enhancement #3265 [NethServer]
+
 * Thu Sep 24 2015 Davide Principi <davide.principi@nethesis.it> - 1.0.3-1
 - Drop lokkit support, always use shorewall - Enhancement #3258 [NethServer]
 
