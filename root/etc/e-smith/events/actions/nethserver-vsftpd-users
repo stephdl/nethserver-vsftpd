@@ -19,9 +19,9 @@ unlink glob "/etc/vsftpd/users/*";
 
 my $tmp;
 if ($usertype eq 'virtual') {
+    $tmp = new File::Temp( UNLINK => 1 );
     for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
     {
-        $tmp = new File::Temp( UNLINK => 1 );
         my %props = $user->props;
         $props{Password} ||= '';
         $props{Chroot} ||= 'enabled';
