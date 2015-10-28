@@ -1,6 +1,6 @@
 Summary: NethServer vsftpd configuration
 Name: nethserver-vsftpd
-Version: 1.0.4
+Version: 1.0.5
 Release: 1%{?dist}
 License: GPL
 URL: %{url_prefix}/%{name} 
@@ -37,6 +37,10 @@ echo "%doc COPYING" >> %{name}-%{version}-filelist
 %defattr(-,root,root)
 
 %changelog
+* Wed Oct 28 2015 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.5-1
+- vsftpd logging too verbose by default - Enhancement #3292 [NethServer]
+- FTP - some virtual users can't login - Bug #3281 [NethServer]
+
 * Tue Sep 29 2015 Davide Principi <davide.principi@nethesis.it> - 1.0.4-1
 - Make Italian language pack optional - Enhancement #3265 [NethServer]
 
