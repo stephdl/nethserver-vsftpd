@@ -39,3 +39,5 @@ nopriv_user=ftp
 
 hide_ids=YES
 
+# allow access to users with writable home dir
+allow_writeable_chroot=YES
