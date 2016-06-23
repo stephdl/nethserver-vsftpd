@@ -1,0 +1,20 @@
+{
+    use esmith::AccountsDB;
+
+    my $adb = esmith::AccountsDB->open_ro or die "Couldn't open AccountsDB\n";
+    my $usertype = $vsftpd{'UserType'} || 'virtual';
+ 
+    if ($usertype ne 'virtual') {
+        return '';
+    }
+    
+    for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
+    {
+        my %props = $user->props;
+        $props{Password} ||= '';
+        next if ($props{Password} eq '');
+
+        $OUT .= $user->key . "\n";
+        $OUT .= $props{Password} . "\n";
+    }
+}

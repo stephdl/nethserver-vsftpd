@@ -47,11 +47,13 @@ event_services($event, 'vsftpd' => 'restart');
 $event = 'nethserver-vsftpd-save';
 
 event_actions($event, qw(
-      nethserver-vsftpd-users 20
-      firewall-adjust 40
+      nethserver-vsftpd-mkdir 20
+      nethserver-vsftpd-setpasswd 40
+      firewall-adjust 60
 ));
 
 event_templates($event, qw(
+      /etc/vsftpd/ftpusers
       /etc/vsftpd/vsftpd.conf
       /etc/vsftpd/chroot_list  
       /etc/vsftpd/user_list

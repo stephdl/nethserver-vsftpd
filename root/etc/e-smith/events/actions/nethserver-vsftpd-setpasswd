@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use esmith::ConfigDB;
+
+my $cdb = esmith::ConfigDB->open_ro or die "Couldn't open ConfigDB\n";
+my $vsftpd = $cdb->get('vsftpd');
+my $usertype = $vsftpd->prop('UserType') || 'virtual';
+
+if ( $usertype ne 'virtual' ) {
+    exit 0;
+}
+
+unlink("/etc/vsftpd/ftpusers.db");
+# remove mpty lines
+system('sed -i "/^\s*$/d" /etc/vsftpd/ftpusers');
+system("/usr/bin/db_load -T -t hash -f /etc/vsftpd/ftpusers /etc/vsftpd/ftpusers.db");
+chmod 0640, "/etc/vsftpd/ftpusers.db";
+unlink("/etc/vsftpd/ftpusers");
