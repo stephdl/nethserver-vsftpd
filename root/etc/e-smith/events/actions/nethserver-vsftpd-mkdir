@@ -2,7 +2,6 @@
 
 use esmith::AccountsDB;
 use esmith::ConfigDB;
-use File::Temp qw(tempfile);
 use File::Path qw(mkpath);
 
 my $cdb = esmith::ConfigDB->open_ro or die "Couldn't open ConfigDB\n";
@@ -18,19 +17,11 @@ unlink glob "/etc/vsftpd/users/*";
 
 my $tmp;
 if ($usertype eq 'virtual') {
-    $tmp = new File::Temp( UNLINK => 1 );
     for my $user ( $adb->get_all_by_prop( type => 'ftp' ) )
     {
         my %props = $user->props;
-        $props{Password} ||= '';
         $props{Chroot} ||= 'enabled';
         $props{ChrootDir} ||= '';
-
-        next if ($props{Password} eq '');
-
-        # generate db
-        print $tmp $user->key . "\n";
-        print $tmp $props{Password} . "\n";
 
         # create Chroot dir
         my $dir = '/var/lib/nethserver/ftp/' . $user->key;
@@ -44,7 +35,5 @@ if ($usertype eq 'virtual') {
             close (USER);
         }
     }
-    system("/usr/bin/db_load -T -t hash -f $tmp /etc/vsftpd/ftpusers.db");
-    chmod 0640, "/etc/vsftpd/ftpusers.db";
 }
 

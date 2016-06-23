@@ -47,7 +47,8 @@ event_services($event, 'vsftpd' => 'restart');
 $event = 'nethserver-vsftpd-save';
 
 event_actions($event, qw(
-      nethserver-vsftpd-users 20
+      nethserver-vsftpd-mkdir 20
+      nethserver-vsftpd-setpasswd 20
       firewall-adjust 40
 ));
 
