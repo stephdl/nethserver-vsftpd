@@ -1,0 +1,16 @@
+#
+# 80vsftpd
+#
+{
+    my $status = $vsftpd{'status'} || 'disabled';
+    my $access = $vsftpd{'access'} || 'green';
+
+    if ($status eq 'enabled') {
+        foreach ( split(',',$access) ) {
+            $_ =~ s/^green$/loc/;
+            $_ =~ s/^red$/net/;
+            $_ = substr($_, 0, 5);
+            $OUT.="FTP(HELPER)\t$_\t-\n";
+        }
+    }
+}
