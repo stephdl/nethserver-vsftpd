@@ -12,7 +12,7 @@ echo $view->header()->setAttribute('template', $T($template));
 
 echo $view->panel()
         ->insert($view->textInput('username', $keyFlags))
-        ->insert($view->textInput('Password'))
+        ->insert($view->textInput('Password', $view::TEXTINPUT_PASSWORD))
         ->insert($view->fieldsetSwitch('Chroot', 'enabled', $view::FIELDSETSWITCH_CHECKBOX|$view::FIELDSETSWITCH_EXPANDABLE)
             ->setAttribute('uncheckedValue', 'disabled')
             ->insert($view->textInput('ChrootDir'))
