@@ -1,6 +1,6 @@
 Summary: NethServer vsftpd configuration
 Name: nethserver-vsftpd
-Version: 1.1.0
+Version: 1.1.1
 Release: 1%{?dist}
 License: GPL
 URL: %{url_prefix}/%{name} 
@@ -39,6 +39,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 09 2018 Davide Principi <davide.principi@nethesis.it> - 1.1.1-1
+- Enhancement: (un)mask password fields - NethServer/dev#5554
+- Fix service access prop (green)
+
 * Thu Jul 07 2016 Stefano Fancello <stefano.fancello@nethesis.it> - 1.1.0-1
 - First NS7 release
 
