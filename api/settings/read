@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use esmith::ConfigDB;
+use JSON;
+
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+my $inputData = readInput();
+my $ret = undef;
+
+if ($inputData->{'action'} eq 'list'){
+    $ret = readUsers();
+    print encode_json($ret);
+    exit (0);
+} else {
+    error();
+}
+
+sub readUsers
+{
+    my $adb = esmith::ConfigDB->open_ro('accounts');
+    my @users = ();
+    my $ret = {
+        'ftp' => \@users,
+    };
+
+    foreach ($adb->get_all_by_prop('type' => 'ftp')) {
+        push @users, +{
+            $_->props(),
+            'name' => $_->key,
+        };
+    }
+
+    return $ret;
+}

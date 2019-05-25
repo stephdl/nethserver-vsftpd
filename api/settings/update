@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use strict;
+use esmith::ConfigDB;
+use esmith::event;
+use JSON;
+
+require '/usr/libexec/nethserver/api/lib/helper_functions.pl';
+
+my $eventName = undef;
+my $ret;
+my $exitCode = 0;
+
+my $db = esmith::ConfigDB->open('accounts');
+
+my $input = readInput();
+my $Name = $input->{'ftp'}->{'name'};
+
+my %props = (
+    'username' => $input->{'ftp'}->{'username'},
+    'Description' => $input->{'ftp'}->{'Description'},
+    'status' => $input->{'ftp'}->{'status'},
+    'ChrootDir' => $input->{'ftp'}->{'ChrootDir'},
+    'Chroot' => $input->{'ftp'}->{'Chroot'},
+    'Password' => $input->{'ftp'}->{'Password'}
+);
+
+if($input->{'action'} eq 'create') {
+    $eventName = 'nethserver-vsftpd-save';
+    $db->new_record($Name, {'type' => 'ftp', %props});
+} elsif($input->{'action'} eq 'delete') {
+    $eventName = 'nethserver-vsftpd-save';
+    $db->set_prop($Name, 'type', 'ftp-deleted');
+} elsif($input->{'action'} eq 'edit') {
+    $eventName = 'nethserver-vsftpd-save';
+    $db->get($Name)->merge_props(%props);
+}  elsif ($input->{'action'} eq 'toggle-lock') {
+    $eventName = 'nethserver-vsftpd-save';
+    my $status = $db->get_prop($Name, 'status') || 'disabled';
+    if ($status eq 'enabled') {
+        $db->set_prop($Name,'status','disabled');
+    } else {
+        $db->set_prop($Name,'status','enabled');
+    }
+} else {
+    error();
+}
+
+my @eventArgs = $Name;
+esmith::event::set_json_log(1);
+
+if(esmith::event::event_signal($eventName, @eventArgs)) {
+    $ret = {'state' => 'success'};
+    if($input->{'action'} eq 'delete') {
+        $db->reload();
+        $db->get($Name)->delete();
+    }
+} else {
+    $ret = {
+        'type' => 'Error',
+        'message' => 'ftp.api_update_failed',
+        'attributes' => {
+            'event_name' => $eventName,
+            'event_args' => \@eventArgs,
+        }
+    };
+    $exitCode = 1;
+}
+
+print encode_json($ret);
+exit($exitCode);

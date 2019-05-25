@@ -49,7 +49,7 @@ const router = new Router({
     routes: [
       { path: '/', redirect: '/dashboard'},
       { path: '/dashboard', component: Dashboard },
-      { path: '/virtualhosts', component: Virtualhosts },
+      { path: '/settings', component: Settings },
       { path: '/logs', component: Logs },
       { path: '/about', name: 'about', component: About }
     ]
